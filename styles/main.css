@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text&family=Open+Sans:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text&family=Open+Sans:wght@300&display=swap');
+
+:root {
+    --vertical-space: 2rem;
+    --horizontal-space: 3rem;
+
+    --light-color: 240, 230, 210;
+    --body-color: #383838;
+    --heading-color: #E64100;
+    --contrast-color: #5EA3A6;
+}
+
+
+body {
+    background-image: linear-gradient(22.5deg, rgba(228, 134, 68, 0.1) 0%, rgba(228, 134, 68, 0.1) 16%, rgba(169, 123, 35, 0.06) 16%, rgba(169, 123, 35, 0.06) 26%, rgba(245, 241, 202, 0.03) 26%, rgba(245, 241, 202, 0.03) 73%, rgba(43, 43, 43, 0.03) 73%, rgba(43, 43, 43, 0.03) 84%, rgba(210, 144, 75, 0.26) 84%, rgba(210, 144, 75, 0.26) 85%, rgba(132, 127, 71, 0.15) 85%, rgba(132, 127, 71, 0.15) 100%), linear-gradient(22.5deg, rgba(25, 25, 25, 0.03) 0%, rgba(25, 25, 25, 0.03) 54%, rgba(203, 224, 15, 0.03) 54%, rgba(203, 224, 15, 0.03) 60%, rgba(204, 204, 204, 0.03) 60%, rgba(204, 204, 204, 0.03) 76%, rgba(37, 37, 37, 0.03) 76%, rgba(37, 37, 37, 0.03) 78%, rgba(115, 115, 115, 0.03) 78%, rgba(115, 115, 115, 0.03) 91%, rgba(63, 63, 63, 0.03) 91%, rgba(63, 63, 63, 0.03) 100%), linear-gradient(157.5deg, rgba(71, 71, 71, 0.03) 0%, rgba(71, 71, 71, 0.03) 6%, rgba(75, 75, 75, 0.03) 6%, rgba(75, 75, 75, 0.03) 15%, rgba(131, 131, 131, 0.03) 15%, rgba(131, 131, 131, 0.03) 18%, rgba(110, 110, 110, 0.03) 18%, rgba(110, 110, 110, 0.03) 37%, rgba(215, 215, 215, 0.03) 37%, rgba(215, 215, 215, 0.03) 62%, rgba(5, 5, 5, 0.03) 62%, rgba(5, 5, 5, 0.03) 100%), linear-gradient(90deg, rgba(255, 156, 74, 0.41), rgba(255, 156, 74, 0.41));
+    font-size: 18px;
+    line-height: 1.5em;
+    color: var(--body-color);
+}
+
+main {
+    background-color: rgba(var(--light-color), 0.8);
+}
+
+header,
+nav {
+    color: var(--light-color);
+}
+
+h1,
+h2,
+h3 {
+    line-height: 1.2em;
+    font-family: 'DM Serif Text', serif;
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--body-color);
+    text-decoration-color: var(--contrast-color);
+}
+
+a:hover {
+    color: var(--contrast-color);
+    text-decoration-color: cadetblue;
+}
+
+body#about img {
+    height: 15em;
+}
+
+
+
+p {
+    max-width: 54em;
+}
+
+body {
+    display: grid;
+    grid-template-areas: "head head"
+        "nav nav"
+        "main main"
+        "foot foot";
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: auto auto 1fr auto;
+    font-family: 'Open Sans', sans-serif;
+
+}
+
+@media screen and (min-width: 25em) {
+    body {
+        grid-template-areas: "head head"
+            "nav main"
+            "foot foot";
+        grid-template-rows: auto 1fr auto;
+    }
+}
+
+body>* {
+    padding-left: var(--horizontal-space);
+    padding-right: var(--horizontal-space);
+}
+
+body>header {
+    grid-area: head;
+}
+
+body>nav {
+    grid-area: nav;
+}
+
+body>nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+body>main {
+    grid-area: main;
+}
+
+body>footer {
+    grid-area: foot;
+}
+
+header,
+footer {
+    padding-top: var(--vertical-space);
+    padding-bottom: var(--vertical-space);
+}
+
+header h1,
+footer h1 {
+    margin: 0;
+}
+
+body#portfolio ul#portfolioItems {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1;
+    list-style-type: none;
+    padding: 0;
+}
+
+@media screen and (min-width: 25em) {
+    body #portfolio ul#portfolioItems li {
+        flex-basis: 48%;
+        padding-right: 2%;
+    }
+}
+
+body #portfolio ul#portfolioItems li img {
+    max-width: 100%;
+
+}
