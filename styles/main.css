@@ -28,6 +28,8 @@ nav {
     color: var(--light-color);
 }
 
+
+
 h1,
 h2,
 h3 {
@@ -36,8 +38,9 @@ h3 {
     color: var(--heading-color);
 }
 
+
 a {
-    color: var(--body-color);
+    color: var(--heading-color);
     text-decoration-color: var(--contrast-color);
 }
 
@@ -132,4 +135,12 @@ body#portfolio ul#portfolioItems {
 body #portfolio ul#portfolioItems li img {
     max-width: 100%;
 
+}
+
+#resumeHeader, #aboutHeader, #portfolioHeader {
+    color: black;
+}
+
+#project1img {
+    max-width: 50rem;
 }
