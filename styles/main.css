@@ -148,4 +148,9 @@ body #portfolio ul#portfolioItems li img {
     min-height: 80%;
 }
 
+#tspAnimation {
+    max-width:100%;
+    height:auto;
+}
+
 
