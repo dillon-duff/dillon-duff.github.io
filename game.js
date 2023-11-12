@@ -5,6 +5,7 @@ var window_width = window.innerWidth;
 var window_height = window.innerHeight;
 
 var tile_width = 16 * 3
+var tile_offset = tile_width / 2
 
 
 var grid_width = Math.floor(window_width / tile_width)
@@ -21,10 +22,13 @@ var forest01_dict = {
     "dirt1": { "col": 8, "row": 16 },
     "dirt2": { "col": 9, "row": 16 },
     "dirt3": { "col": 10, "row": 16 },
+    "stump": { "col": 4, "row": 9 },
     "mush0": { "col": 5, "row": 9 },
     "mush1": { "col": 6, "row": 9 },
+    "twig0": { "col": 4, "row": 10 },
     "mush2": { "col": 5, "row": 10 },
     "mush3": { "col": 6, "row": 10 },
+
 }
 
 var config = {
@@ -97,11 +101,13 @@ function create() {
 
     // Randomly fill the background with grass and dirt
     forest_01_ground_textures = ["grass0", "grass1", "grass2", "dirt0", "dirt1", "dirt2"]
-    forest_01_mush_textures = ["mush0", "mush1", "mush2", "mush3"]
+    forest_01_mush_textures = ["mush0", "mush1", "mush2", "mush3", "stump"]
 
     for (var i = 0; i < grid_width; i++) {
         for (var j = 0; j < grid_height; j++) {
             var pos = grid_coords_to_x_y(i, j)
+            pos[0] += tile_offset
+            pos[1] += tile_offset
 
             var ground_texture = forest_01_ground_textures[Math.floor(Math.random() * forest_01_ground_textures.length)]
             this.add.image(pos[0], pos[1], ground_texture)
