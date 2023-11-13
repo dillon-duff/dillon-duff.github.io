@@ -194,7 +194,6 @@ class Wizard extends Phaser.Physics.Arcade.Sprite {
         this.setCollideWorldBounds(true);
         this.setImmovable(true);
 
-        // Wizard-specific properties
         this.interactionZone = scene.add.zone(this.x - this.width, this.y, this.width * 2, this.height * 1.5);
         scene.physics.world.enable(this.interactionZone);
     }
@@ -399,9 +398,8 @@ class GameScene extends Phaser.Scene {
     }
 
     update() {
-        // Update methods for player and wizard
         if (this.player) this.player.update(this.cursors);
-        if (this.wizard) this.wizard.update(); // If the wizard has update logic
+        if (this.wizard) this.wizard.update();
     }
 
     openShopMenu(player, wizard) {
