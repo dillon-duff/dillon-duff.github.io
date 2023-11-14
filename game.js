@@ -48,6 +48,63 @@ let total_forest_tiles = Object.keys(id_to_forest_tile_dict).length;
 
 console.log(id_to_forest_tile_dict)
 
+class Shop {
+    constructor(scene) {
+        this.scene = scene;
+        this.shopGroup = this.scene.add.group();
+        this.isOpen = false;
+        this.items = [
+            { name: 'Potion', cost: 100 },
+            { name: 'Sword', cost: 200 }
+        ];
+        this.createShopUI();
+    }
+
+    createShopUI() {
+        const graphics = this.scene.add.graphics();
+        graphics.fillStyle(0x000000, 0.9); // Black color, fully opaque
+        graphics.fillRect(this.scene.cameras.main.centerX - (this.items.length * 50), this.scene.cameras.main.centerY - (this.items.length * 25), 200, this.items.length * 50 + 50);
+
+        const bg = this.scene.add.existing(graphics);
+        this.shopGroup.add(bg);
+
+        this.items.forEach((item, index) => {
+            const itemText = this.scene.add.text(this.scene.cameras.main.centerX - 100, index * 50 + 50 + this.scene.cameras.main.centerY - (this.items.length * 25), `${item.name} - ${item.cost} Gold`, { fontSize: '16px', fill: '#fff' });
+            this.shopGroup.add(itemText);
+        });
+
+        const closeButton = this.scene.add.text(this.scene.cameras.main.centerX - 100, this.scene.cameras.main.centerY - (this.items.length * 25), 'Close', { fontSize: '16px', fill: '#fff' });
+        closeButton.setInteractive();
+        closeButton.on('pointerdown', () => this.hideShop());
+        this.shopGroup.add(closeButton);
+
+        this.shopGroup.getChildren().forEach(child => {
+            child.setVisible(false);
+        });
+    }
+
+    showShop() {
+        if (!this.isOpen) {
+            this.shopGroup.getChildren().forEach(child => {
+                child.setVisible(true);
+            });
+        }
+        this.isOpen = true;
+
+    }
+
+    hideShop() {
+        this.isOpen = false;
+        this.shopGroup.getChildren().forEach(child => {
+            child.setVisible(false);
+        });
+
+    }
+
+    update() {
+        // TODO: Handle shop interactions
+    }
+}
 
 class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, textureKey) {
@@ -188,13 +245,13 @@ class Wizard extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);
 
         let wizard_body_width = Math.floor(this.width * 0.6)
-        let wizard_body_height = Math.floor(this.height * 0.6)
+        let wizard_body_height = Math.floor(this.height * 0.4)
         this.body.setSize(wizard_body_width, wizard_body_height);
         this.setScale(MY_SCALE);
         this.setCollideWorldBounds(true);
         this.setImmovable(true);
 
-        this.interactionZone = scene.add.zone(this.x - this.width, this.y, this.width * 2, this.height * 1.5);
+        this.interactionZone = scene.add.zone(this.x - this.width, this.y, this.width * 2, this.body.height * 4);
         scene.physics.world.enable(this.interactionZone);
     }
 
@@ -251,8 +308,8 @@ class GameScene extends Phaser.Scene {
         ));
 
         this.physics.world.setBounds(0, 0, HORIZONTAL_TILES * TILE_WIDTH, VERTICAL_TILES * TILE_WIDTH);
+        // Load all textures from each forest palette
         for (let forest_num = 0; forest_num < 6; forest_num++) {
-            // Load all textures from each forest palette
             for (let key in forest_tiles_dict) {
                 let item = forest_tiles_dict[key];
                 let col = item.col;
@@ -301,11 +358,27 @@ class GameScene extends Phaser.Scene {
             }
         }
 
+        // Create wizard
+        const wizardPos = grid_coords_to_x_y(12, 1, this.scaleFactor);
+        this.wizard = new Wizard(this, wizardPos[0], wizardPos[1], 'wizard');
+
+        // Animate wizard
+        this.anims.create({
+            key: 'wizard_idle',
+            frames: this.anims.generateFrameNames('wizard', {
+                start: 0,
+                end: 1
+            }),
+            frameRate: 2,
+            repeat: -1
+        })
+        this.wizard.anims.play('wizard_idle');
+
         // Create player 1
-        const playerPos = grid_coords_to_x_y(6, 10, this.scaleFactor);
+        const playerPos = grid_coords_to_x_y(12, 5, this.scaleFactor);
         this.player = new Player(this, playerPos[0], playerPos[1], 'dude1');
 
-        // Animeate player 1
+        // Animate player 1
         this.anims.create({
             key: 'dude1_right',
             frames: [
@@ -367,21 +440,7 @@ class GameScene extends Phaser.Scene {
             repeat: -1
         });
 
-        // Create wizard
-        const wizardPos = grid_coords_to_x_y(12, 1, this.scaleFactor);
-        this.wizard = new Wizard(this, wizardPos[0], wizardPos[1], 'wizard');
 
-        // Animate wizard
-        this.anims.create({
-            key: 'wizard_idle',
-            frames: this.anims.generateFrameNames('wizard', {
-                start: 0,
-                end: 1
-            }),
-            frameRate: 2,
-            repeat: -1
-        })
-        this.wizard.anims.play('wizard_idle');
 
         // Set up collision and overlap
         this.physics.add.collider(this.player, this.wizard);
@@ -395,18 +454,23 @@ class GameScene extends Phaser.Scene {
         this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+
+        // Add shop
+        this.shop = new Shop(this);
     }
 
     update() {
         if (this.player) this.player.update(this.cursors);
         if (this.wizard) this.wizard.update();
+        if (this.shop.isOpen) {
+            this.shop.update();
+        }
     }
 
     openShopMenu(player, wizard) {
         // Shop menu logic
-        if (this.cursors.space.isDown && !this.shopOpen) {
-            console.log('Open Shop Menu');
-            this.shopOpen = true;
+        if (this.cursors.space.isDown) {
+            this.shop.showShop();
         }
     }
 }
@@ -457,7 +521,7 @@ let config = {
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true
+            debug: false
         }
     },
     scene: [GameScene],
