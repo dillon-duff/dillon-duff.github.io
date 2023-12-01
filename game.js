@@ -48,7 +48,6 @@ for (let i = 0; i < 6; i++) {
 
 let total_forest_tiles = Object.keys(id_to_forest_tile_dict).length;
 
-console.log(id_to_forest_tile_dict)
 
 class Shop {
     constructor(scene) {
@@ -251,27 +250,110 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.setCollideWorldBounds(true);
         this.setScale(scene.scaleFactor);
 
-        this.health = 100; // Default health
-        this.speed = 50; // Default speed
+        this.health = 100;
+        this.maxVelocity = 75 * scene.scaleFactor;
+        this.lastDirection = "u";
 
-        this.initializeEnemyProperties();
+        this.attacking = false;
+        this.attackDuration = 15;
+        this.currentAttackDuration = 0;
+
     }
 
-    initializeEnemyProperties() {
-        switch (this.enemyType) {
-            case 'knight':
-                this.health = 50;
-                this.speed = 60;
-                break;
-            case 'ogre':
-                this.health = 150;
-                this.speed = 30;
-                break;
-        }
-    }
+
 
     update() {
-        this.anims.play('knight_idle_right', true);
+        // Track player
+        let playerX = this.scene.player.x
+        let playerY = this.scene.player.y
+        let dX = playerX - this.x;
+        let dY = playerY - this.y;
+        let dist = Math.sqrt((dX * dX) + (dY * dY));
+
+        if (dist < 50 || this.attacking) {
+            let direction = velocity_to_direction(this.body.velocity);
+            this.flipX = false;
+            if (this.lastDirection == "l") {
+                this.flipX = true;
+            }
+            this.anims.play("knight_attack_right", true);
+            this.setVelocityX(0);
+            this.setVelocityY(0);
+            if (this.currentAttackDuration > this.attackDuration) {
+                this.attacking = false;
+                this.currentAttackDuration = 0;
+            } else {
+                this.attacking = true;
+            }
+
+            this.currentAttackDuration++;
+
+            return;
+        }
+        this.attacking = false;
+
+        let dirX = dX / dist;
+        let dirY = dY / dist;
+
+        let vX = dirX * this.maxVelocity;
+        let vY = dirY * this.maxVelocity;
+
+        this.setVelocityX(vX)
+        this.setVelocityY(vY)
+
+        let animDirection = velocity_to_direction(this.body.velocity);
+        if (!(animDirection == "n")) {
+            this.lastDirection = animDirection;
+        }
+        // this.setVelocityX(5)
+        if (!(animDirection == "n")) {
+            this.lastDirection = animDirection;
+        }
+
+        let direction = velocity_to_direction(this.body.velocity);
+        this.play_anim_from_directions(direction, animDirection)
+    }
+
+    play_anim_from_directions(dir, lastDir) {
+        switch (dir) {
+            case "u":
+                // this.anims.play('knight_up', true);
+                this.play_anim_from_directions(lastDir, lastDir);
+                break;
+            case "d":
+                // this.anims.play('dude1_down', true);
+                this.play_anim_from_directions(lastDir, lastDir);
+                break;
+            case "r":
+                this.flipX = false;
+                this.anims.play('knight_right', true);
+                break;
+            case "l":
+                this.flipX = true;
+                this.anims.play('knight_right', true);
+                break;
+            case "n":
+                switch (lastDir) {
+                    case "n":
+                        break;
+                    case "u":
+                        // this.anims.play('dude1_idle_up', true);
+                        this.play_anim_from_directions(lastDir, lastDir);
+                        break;
+                    case "d":
+                        // this.anims.play('dude1_idle_down', true);
+                        this.play_anim_from_directions(lastDir, lastDir);
+                        break;
+                    case "r":
+                        this.flipX = false;
+                        this.anims.play('knight_idle_right', true);
+                        break;
+                    case "l":
+                        this.flipX = true;
+                        this.anims.play('knight_idle_right', true);
+                        break;
+                }
+        }
     }
 
     takeDamage(amount) {
@@ -536,7 +618,7 @@ class GameScene extends Phaser.Scene {
                 { key: 'knight', frame: 55 },
                 { key: 'knight', frame: 58 },
             ],
-            frameRate: 5,
+            frameRate: 20,
             repeat: -1
         });
 
@@ -586,6 +668,7 @@ class GameScene extends Phaser.Scene {
         // Set up collision and overlap
         this.physics.add.collider(this.player, this.wizard);
         this.physics.add.overlap(this.player, this.wizard.interactionZone, this.openShopMenu, null, this);
+        this.physics.add.overlap(this.player, this.enemies, this.handlePlayerEnemyCollision, null, this);
 
         // Set up cursors
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -598,6 +681,11 @@ class GameScene extends Phaser.Scene {
 
         // Add shop
         this.shop = new Shop(this);
+    }
+
+    handlePlayerEnemyCollision(player, enemy) {
+        // player.takeDamage(enemy.attackPower);
+        // enemy.reactToCollision(player); // take damage or play animation
     }
 
     update() {
