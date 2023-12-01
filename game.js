@@ -30,6 +30,8 @@ let forest_tiles_dict = {
 
 let num_forest_tiles = Object.keys(forest_tiles_dict).length;
 
+let playerWeapon = { "damage": 5, "fireRate": 250, "isFiring": false }
+
 let id_to_forest_tile_dict = {};
 let forest_tile_to_id_dict = {};
 
@@ -116,6 +118,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.setScale(scene.scaleFactor);
 
         this.maxVelocity = 100 * scene.scaleFactor;
+        this.lastDirection = "u";
     }
 
     play_anim_from_directions(dir, lastDir) {
@@ -191,52 +194,98 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.setVelocityY(0);
         }
 
-        // if (cursors.space.isDown) {
-        //     if (playerWeapon && !playerWeapon.isFiring) {
-        //         let bullet = this.physics.add.sprite(this.x, this.y, 'bullet1'); // Replace 'bullet' with your projectile's texture
-        //         bullet.setScale(MY_SCALE / 2)
-        //         if (this.body.velocity.x == 0 && this.body.velocity.y == 0) {
-        //             switch (lastDirection) {
-        //                 case "n":
-        //                     bullet.setVelocityY(MAX_VELOCITY * 2);
-        //                     break;
-        //                 case "u":
-        //                     bullet.setVelocityY(-MAX_VELOCITY * 2);
-        //                     break;
-        //                 case "d":
-        //                     bullet.setVelocityY(MAX_VELOCITY * 2);
-        //                     break;
-        //                 case "r":
-        //                     bullet.setVelocityX(MAX_VELOCITY * 2);
-        //                     break;
-        //                 case "l":
-        //                     bullet.setVelocityX(-MAX_VELOCITY * 2);
-        //                     break;
-        //             }
-        //         } else {
-        //             bullet.setVelocityX(this.body.velocity.x * 2); // Adjust the velocity as needed
-        //             bullet.setVelocityY(this.body.velocity.y * 2); // Adjust the velocity as needed
-        //         }
-        //         bullet.setActive(true);
-        //         bullet.setVisible(true);
-        //         bullet.damage = playerWeapon.damage; // Set damage based on the current weapon
-        //         bullet.anims.play('bullet1', true);
+        if (cursors.space.isDown) {
+            if (playerWeapon && !playerWeapon.isFiring) {
+                let bullet = this.scene.physics.add.sprite(this.x, this.y, 'bullet1'); // Replace 'bullet' with your projectile's texture
+                bullet.setScale(MY_SCALE / 2);
+                if (this.body.velocity.x == 0 && this.body.velocity.y == 0) {
+                    switch (this.lastDirection) {
+                        case "n":
+                            bullet.setVelocityY(MAX_VELOCITY * 2);
+                            break;
+                        case "u":
+                            bullet.setVelocityY(-MAX_VELOCITY * 2);
+                            break;
+                        case "d":
+                            bullet.setVelocityY(MAX_VELOCITY * 2);
+                            break;
+                        case "r":
+                            bullet.setVelocityX(MAX_VELOCITY * 2);
+                            break;
+                        case "l":
+                            bullet.setVelocityX(-MAX_VELOCITY * 2);
+                            break;
+                    }
+                } else {
+                    bullet.setVelocityX(this.body.velocity.x * 2); // Adjust the velocity as needed
+                    bullet.setVelocityY(this.body.velocity.y * 2); // Adjust the velocity as needed
+                }
+                bullet.setActive(true);
+                bullet.setVisible(true);
+                bullet.damage = playerWeapon.damage; // Set damage based on the current weapon
+                bullet.anims.play('bullet1', true);
 
-        //         // Add collision handling for the bullet (e.g., with enemies or objects)
-        //         // this.physics.add.collider(bullet, enemies, bulletHitEnemy, null, this);
+                // Add collision handling for the bullet (e.g., with enemies or objects)
+                // this.physics.add.collider(bullet, enemies, bulletHitEnemy, null, this);
 
-        //         // Prevent the player from firing again until the fire rate cooldown is over
-        //         playerWeapon.isFiring = true;
-        //         this.time.delayedCall(playerWeapon.fireRate, () => {
-        //             playerWeapon.isFiring = false;
-        //         });
-        //     }
-        // }
+                // Prevent the player from firing again until the fire rate cooldown is over
+                playerWeapon.isFiring = true;
+                this.scene.time.delayedCall(playerWeapon.fireRate, () => {
+                    playerWeapon.isFiring = false;
+                });
+            }
+        }
 
         let direction = velocity_to_direction(this.body.velocity);
         this.play_anim_from_directions(direction, animDirection)
     }
 }
+
+class Enemy extends Phaser.Physics.Arcade.Sprite {
+    constructor(scene, x, y, textureKey, enemyType) {
+        super(scene, x, y, textureKey);
+        scene.add.existing(this);
+        scene.physics.add.existing(this);
+
+        this.enemyType = enemyType;
+        this.setCollideWorldBounds(true);
+        this.setScale(scene.scaleFactor);
+
+        this.health = 100; // Default health
+        this.speed = 50; // Default speed
+
+        this.initializeEnemyProperties();
+    }
+
+    initializeEnemyProperties() {
+        switch (this.enemyType) {
+            case 'knight':
+                this.health = 50;
+                this.speed = 60;
+                break;
+            case 'ogre':
+                this.health = 150;
+                this.speed = 30;
+                break;
+        }
+    }
+
+    update() {
+        this.anims.play('knight_idle_right', true);
+    }
+
+    takeDamage(amount) {
+        this.health -= amount;
+        if (this.health <= 0) {
+            this.die();
+        }
+    }
+
+    die() {
+        this.destroy();
+    }
+}
+
 
 class Wizard extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, textureKey) {
@@ -293,6 +342,12 @@ class GameScene extends Phaser.Scene {
         this.load.spritesheet('wizard',
             'Mini_Dungeon/Characters/Wizard.png',
             { frameWidth: 32, frameHeight: 32 }
+        );
+
+        // Knight Enemy
+        this.load.spritesheet('knight',
+            'Mini_Dungeon/Characters/PlayerV3.png',
+            { frameWidth: 16, frameHeight: 16 }
         );
 
         // Bullets
@@ -439,8 +494,94 @@ class GameScene extends Phaser.Scene {
             frameRate: 5,
             repeat: -1
         });
+        this.anims.create({
+            key: 'dude1_idle_right',
+            frames: [
+                { key: 'dude1_idle', frame: 2 },
+                { key: 'dude1_idle', frame: 5 },
+            ],
+            frameRate: 5,
+            repeat: -1
+        });
+
+        // Animate knight
+        this.anims.create({
+            key: 'knight_idle_right',
+            frames: [
+                { key: 'knight', frame: 16 },
+                { key: 'knight', frame: 19 },
+            ],
+            frameRate: 3,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'knight_right',
+            frames: [
+                { key: 'knight', frame: 31 },
+                { key: 'knight', frame: 34 },
+                { key: 'knight', frame: 37 },
+                { key: 'knight', frame: 40 }
+            ],
+            frameRate: 5,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'knight_attack_right',
+            frames: [
+                { key: 'knight', frame: 46 },
+                { key: 'knight', frame: 49 },
+                { key: 'knight', frame: 52 },
+                { key: 'knight', frame: 55 },
+                { key: 'knight', frame: 58 },
+            ],
+            frameRate: 5,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'knight_damaged_right',
+            frames: [
+                { key: 'knight', frame: 61 },
+                { key: 'knight', frame: 64 },
+                { key: 'knight', frame: 67 },
+                { key: 'knight', frame: 70 },
+                { key: 'knight', frame: 73 },
+            ],
+            frameRate: 5,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'knight_duck_right',
+            frames: [
+                { key: 'knight', frame: 76 },
+                { key: 'knight', frame: 79 },
+                { key: 'knight', frame: 82 },
+                { key: 'knight', frame: 85 },
+                { key: 'knight', frame: 88 },
+                { key: 'knight', frame: 88 },
+            ],
+            frameRate: 5,
+            repeat: -1
+        });
 
 
+
+        // Animate bullet
+        this.anims.create({
+            key: 'bullet1',
+            frames: [
+                { key: 'bullets1', frame: 40 },
+                { key: 'bullets1', frame: 44 },
+            ],
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.enemies = this.physics.add.group();
+        this.enemies.add(new Enemy(this, 100, 100, 'knight', 'knight'));
 
         // Set up collision and overlap
         this.physics.add.collider(this.player, this.wizard);
@@ -465,6 +606,13 @@ class GameScene extends Phaser.Scene {
         if (this.shop.isOpen) {
             this.shop.update();
         }
+        this.enemies.children.iterate(enemy => {
+            enemy.update();
+        })
+
+
+
+
     }
 
     openShopMenu(player, wizard) {
