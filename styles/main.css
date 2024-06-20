@@ -151,6 +151,14 @@ body #portfolio ul#portfolioItems li img {
     max-width:70%;
     height:auto;
 }
+#CPPNimg {
+    max-width:60%;
+    height:auto;
+}
+#genderfairimg {
+    max-width:60%;
+    height:auto;
+}
 /* 
 #networkimg {
     max-width: 40%;
