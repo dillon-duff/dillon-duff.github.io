@@ -136,7 +136,9 @@ body #portfolio ul#portfolioItems li img {
 
 }
 
-#resumeHeader, #aboutHeader, #portfolioHeader {
+#resumeHeader,
+#aboutHeader,
+#portfolioHeader {
     color: black;
 }
 
@@ -148,17 +150,20 @@ body #portfolio ul#portfolioItems li img {
 }
 
 #tspAnimation {
-    max-width:70%;
-    height:auto;
+    max-width: 70%;
+    height: auto;
 }
+
 #CPPNimg {
-    max-width:60%;
-    height:auto;
+    max-width: 60%;
+    height: auto;
 }
+
 #genderfairimg {
-    max-width:60%;
-    height:auto;
+    max-width: 60%;
+    height: auto;
 }
+
 /* 
 #networkimg {
     max-width: 40%;
@@ -170,39 +175,51 @@ body #portfolio ul#portfolioItems li img {
 } */
 
 .container {
-    display: flex; /* Use Flexbox for layout */
-    flex-wrap: wrap; /* Allow items to wrap to the next line on smaller screens */
-    justify-content: flex-start; /* Align items to the start of the container horizontally */
-    align-items: flex-start; /* Align items to the start of the container vertically */
-  }
-  
-
-  
-  #networkimg {
-    max-width: 25%; /* Limit the maximum width of the image */
-    height: auto; /* Let the height adjust automatically */
-  }
-  .image-row {
-    display: flex; /* Use Flexbox for the row of images */
-    flex-wrap: wrap; /* Allow items to wrap to the next line on smaller screens */
+    display: flex;
+    /* Use Flexbox for layout */
+    flex-wrap: wrap;
+    /* Allow items to wrap to the next line on smaller screens */
     justify-content: flex-start;
-  }
-  
-  .image-row img {
-    max-width: 25%; /* Limit the maximum width of the images */
+    /* Align items to the start of the container horizontally */
+    align-items: flex-start;
+    /* Align items to the start of the container vertically */
+}
+
+
+
+#networkimg {
+    max-width: 25%;
+    /* Limit the maximum width of the image */
     height: auto;
-  }
+    /* Let the height adjust automatically */
+}
 
-  #jupyternb {
-    flex: 1; /* Allow the iframe to grow and take available space */
-    max-width: 75%; /* Limit the maximum width of the iframe */
+.image-row {
+    display: flex;
+    /* Use Flexbox for the row of images */
+    flex-wrap: wrap;
+    /* Allow items to wrap to the next line on smaller screens */
+    justify-content: flex-start;
+}
+
+.image-row img {
+    max-width: 25%;
+    /* Limit the maximum width of the images */
+    height: auto;
+}
+
+#jupyternb {
+    flex: 1;
+    /* Allow the iframe to grow and take available space */
+    max-width: 75%;
+    /* Limit the maximum width of the iframe */
     height: 2800px;
-  }
+}
 
-  #jupyternb2 {
-    flex: 1; /* Allow the iframe to grow and take available space */
-    max-width: 100%; /* Limit the maximum width of the iframe */
+#jupyternb2 {
+    flex: 1;
+    /* Allow the iframe to grow and take available space */
+    max-width: 100%;
+    /* Limit the maximum width of the iframe */
     height: 2800px;
-  }
-
-  
+}

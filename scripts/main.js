@@ -14,7 +14,11 @@ rhit.main = function () {
 	document.querySelector("#project1img").onmouseout = (event) => {
 		document.querySelector("#project1img").setAttribute("src", "images/newevolutiondisplay.png");
 	}
-	
+
 };
+
+function goHome() {
+	window.location.href = "https://dillon-duff.github.io/"
+}
 
 rhit.main();
