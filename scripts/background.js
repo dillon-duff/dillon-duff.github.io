@@ -44,13 +44,12 @@ function updateFlowField() {
             let index = x + y * cols;
             let angle = noise(xoff, yoff, noiseZ) * TWO_PI * 4;
             let v = p5.Vector.fromAngle(angle);
-            v.setMag(1);
+            v.setMag(0.01);
             flowField[index] = v;
             xoff += 0.1;
         }
         yoff += 0.1;
     }
-    noiseZ += 0.001;
 }
 
 function updateParticles() {
