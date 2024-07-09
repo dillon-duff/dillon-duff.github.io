@@ -7,14 +7,6 @@ rhit.main = function () {
 		window.open('mailto:duffdl@rose-hulman.edu?')
 	}
 
-	document.querySelector("#project1img").onmouseover = (event) => {
-		document.querySelector("#project1img").setAttribute("src", "images/evolution.gif");
-		document.querySelector("#project1img").setAttribute("width", "85%");
-	}
-	document.querySelector("#project1img").onmouseout = (event) => {
-		document.querySelector("#project1img").setAttribute("src", "images/newevolutiondisplay.png");
-	}
-
 };
 
 function goHome() {

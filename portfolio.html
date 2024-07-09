@@ -10,13 +10,16 @@
     <link rel="icon" type="image/png" sizes="32x32" href="images/icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="images/icons/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
 </head>
 
 <body id="portfolio">
-    <header>
+    <canvas id="backgroundCanvas"></canvas>
+
+    <header id="nameHeader">
         <h1 onclick="goHome()">Dillon Duff</h1>
     </header>
-    <nav>
+    <nav id="sideBar">
         <ul>
             <li><a href="index.html">About</a></li>
             <li><a href="portfolio.html">Portfolio</a></li>
@@ -138,6 +141,8 @@
         You can e-mail me at <a href="#emailMe">duffdl@rose-hulman.edu</a>
     </footer>
     <script src="scripts/main.js"></script>
+    <script src="scripts/background.js"></script>
+
 </body>
 
 </html>
