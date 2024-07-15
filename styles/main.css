@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text&family=Open+Sans:wght@300&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text&family=Open+Sans:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=Roboto:wght@300;400;500&display=swap');
 
 :root {
     --vertical-space: 2rem;
@@ -165,16 +166,6 @@ body #portfolio ul#portfolioItems li img {
     height: auto;
 }
 
-/* 
-#networkimg {
-    max-width: 40%;
-    height: 500px
-}
-
-#jupyternb{
-    align-self: flex-end;
-} */
-
 .container {
     display: flex;
     /* Use Flexbox for layout */
@@ -185,8 +176,6 @@ body #portfolio ul#portfolioItems li img {
     align-items: flex-start;
     /* Align items to the start of the container vertically */
 }
-
-
 
 #networkimg {
     max-width: 25%;
@@ -237,4 +226,52 @@ body #portfolio ul#portfolioItems li img {
 body>* {
     position: relative;
     z-index: 1;
+}
+
+/* Sidebar styles */
+#sideBar {
+    padding: 2rem 0;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    transition: all 0.3s ease;
+    color: #E64100;
+}
+
+#sideBar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#sideBar ul li {
+    margin-bottom: 1rem;
+}
+
+#sideBar ul li a {
+    display: block;
+    padding: 0.8rem 2rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+    font-weight: 300;
+}
+
+#sideBar ul li a:hover {
+    color: #3498db;
+    transform: translateX(10px);
+}
+
+#sideBar ul li a.active {
+    color: #fff;
+    font-weight: 500;
+}
+
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+#sideBar {
+    font-family: 'Poppins', sans-serif;
 }

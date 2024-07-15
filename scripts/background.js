@@ -5,8 +5,9 @@ let flowField = [];
 let cols, rows;
 let scale = 20;
 let noiseZ = 0;
-let particleCount = 15;
+let particleCount = 5;
 let particleColor;
+let framesDrawn = 0;
 
 function setup() {
     canvas = document.getElementById('backgroundCanvas');
@@ -21,19 +22,24 @@ function setup() {
         particles.push(new Particle());
     }
 
-    particleColor = color(228, 134, 68, 255);
+    particleColor = color(228, 134, 68, 155);
 
+    updateFlowField();
     window.requestAnimationFrame(draw);
 }
 
 function draw() {
-    ctx.fillStyle = 'rgba(240, 230, 210, 0.02)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    updateFlowField();
-    updateParticles();
 
+    if (framesDrawn % 5 == 0) {
+        ctx.fillStyle = 'rgba(240, 230, 210, 0.02)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        updateParticles();
+    }
     window.requestAnimationFrame(draw);
+
+    framesDrawn++;
 }
 
 function updateFlowField() {
@@ -53,11 +59,17 @@ function updateFlowField() {
 }
 
 function updateParticles() {
-    for (let particle of particles) {
+    let maxAge = 500;
+    for (let i = 0; i < particles.length; i++) {
+        particle = particles[i]
         particle.follow(flowField);
         particle.update();
         particle.edges();
         particle.show();
+        age = particle.getAge()
+        if (age > maxAge) {
+            particles[i] = new Particle();
+        }
     }
 }
 
@@ -66,8 +78,13 @@ class Particle {
         this.pos = createVector(random(canvas.width), random(canvas.height));
         this.vel = createVector(0, 0);
         this.acc = createVector(0, 0);
-        this.maxSpeed = 1;
+        this.maxSpeed = .4;
         this.prevPos = this.pos.copy();
+        this.age = 0;
+    }
+
+    getAge() {
+        return this.age;
     }
 
     update() {
@@ -75,6 +92,7 @@ class Particle {
         this.vel.limit(this.maxSpeed);
         this.pos.add(this.vel);
         this.acc.mult(0);
+        this.age += 1;
     }
 
     follow(vectors) {
@@ -147,7 +165,7 @@ function noise(x, y, z) {
 }
 
 window.onload = setup;
-window.onresize = function() {
+window.onresize = function () {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     cols = Math.floor(canvas.width / scale);
