@@ -120,22 +120,84 @@ footer h1 {
 }
 
 body#portfolio ul#portfolioItems {
-    flex-wrap: wrap;
-    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 3rem;
     list-style-type: none;
-    padding: 0;
+    padding: 3rem;
 }
 
-@media screen and (min-width: 25em) {
-    body #portfolio ul#portfolioItems li {
-        flex-basis: 48%;
-        padding-right: 2%;
-    }
+body#portfolio ul#portfolioItems li {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2rem;
 }
 
-body #portfolio ul#portfolioItems li img {
-    max-width: 100%;
+body#portfolio ul#portfolioItems li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
 
+body#portfolio ul#portfolioItems li h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+body#portfolio ul#portfolioItems li h3 {
+    font-size: 1rem;
+    color: var(--contrast-color);
+    margin-bottom: 1rem;
+}
+
+body#portfolio ul#portfolioItems li img {
+    width: 100%;
+    border-radius: 10px;
+    margin: 1rem 0;
+    transition: transform 0.3s ease;
+}
+
+body#portfolio ul#portfolioItems li img:hover {
+    transform: scale(1.02);
+}
+
+body#portfolio ul#portfolioItems li ul {
+    padding-left: 0;
+    margin-top: 1.5rem;
+    list-style: none;
+}
+
+body#portfolio ul#portfolioItems li ul li {
+    background: none;
+    box-shadow: none;
+    padding: 0.5rem 0 0.5rem 2rem;
+    font-size: 0.95rem;
+    color: var(--body-color);
+    position: relative;
+    margin-bottom: 0.5rem;
+}
+
+body#portfolio ul#portfolioItems li ul li::before {
+    content: "▹";
+    position: absolute;
+    left: 0;
+    color: var(--heading-color);
+    font-size: 1.2rem;
+    transition: transform 0.2s ease;
+}
+
+body#portfolio ul#portfolioItems li ul li:hover::before {
+    transform: translateX(3px);
+}
+
+body#portfolio ul#portfolioItems li ul li:hover {
+    transform: none;
+    color: var(--heading-color);
+    transition: color 0.2s ease;
 }
 
 #resumeHeader,
@@ -152,18 +214,24 @@ body #portfolio ul#portfolioItems li img {
 }
 
 #tspAnimation {
-    max-width: 70%;
+    max-width: 100%;
     height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
 #CPPNimg {
-    max-width: 60%;
+    max-width: 100%;
     height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
 #genderfairimg {
-    max-width: 60%;
+    max-width: 100%;
     height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
 .container {
