@@ -435,3 +435,63 @@ body#resume ul ul li:hover {
     transform: translateX(5px);
     transition: all 0.2s ease;
 }
+
+/* About Page Styles */
+body#about main {
+    max-width: 1200px;
+    padding: 2rem 3rem;
+    margin: 2rem auto;
+}
+
+body#about #aboutHeader {
+    font-size: 2.5rem;
+    color: var(--heading-color);
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    letter-spacing: 1px;
+}
+
+body#about #avatar {
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    float: left;
+    margin: 0 2rem 1rem 0;
+    max-width: 300px;
+    height: auto;
+}
+
+body#about #avatar:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+body#about p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: rgba(56, 56, 56, 0.9);
+    background: rgba(255, 255, 255, 0.75);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 2rem;
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 768px) {
+    body#about #avatar {
+        float: none;
+        display: block;
+        margin: 0 auto 2rem auto;
+        max-width: 250px;
+    }
+    
+    body#about main {
+        padding: 1rem;
+    }
+    
+    body#about p {
+        padding: 1.5rem;
+    }
+}
